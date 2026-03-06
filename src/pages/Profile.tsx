@@ -17,7 +17,7 @@ const Profile = () => {
 
   useEffect(() => {
     // Load profile from localStorage for now (until auth is set up)
-    const saved = localStorage.getItem('soundwave_profile');
+    const saved = localStorage.getItem('bloodslp_profile');
     if (saved) {
       const p = JSON.parse(saved);
       setDisplayName(p.displayName || 'Music Lover');
