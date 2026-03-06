@@ -16,7 +16,7 @@ const Sidebar = () => {
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar border-r border-sidebar-border z-30 flex flex-col">
       <div className="p-6">
-        <h1 className="text-2xl font-heading font-bold text-gradient">SoundWave</h1>
+        <h1 className="text-2xl font-heading font-bold text-gradient">BloodSLP</h1>
       </div>
       
       <nav className="flex-1 px-3 space-y-1">
