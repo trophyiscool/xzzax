@@ -47,7 +47,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">
-        <p className="text-xs text-muted-foreground text-center">© 2026 SoundWave</p>
+        <p className="text-xs text-muted-foreground text-center">© 2026 BloodSLP</p>
       </div>
     </aside>
   );

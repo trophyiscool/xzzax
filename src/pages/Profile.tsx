@@ -44,7 +44,7 @@ const Profile = () => {
   }, []);
 
   const saveProfile = () => {
-    localStorage.setItem('soundwave_profile', JSON.stringify({ displayName, bio, avatarUrl }));
+    localStorage.setItem('bloodslp_profile', JSON.stringify({ displayName, bio, avatarUrl }));
     setEditing(false);
     toast.success('Profile saved!');
   };
