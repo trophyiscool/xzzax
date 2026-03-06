@@ -82,6 +82,7 @@ export default {
   				'Noto Color Emoji'
   			],
   			serif: [
+  				'Crimson Text',
   				'ui-serif',
   				'Georgia',
   				'Cambria',

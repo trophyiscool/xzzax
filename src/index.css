@@ -4,33 +4,35 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap");
+
 @layer base {
   :root {
     --background: 0 0% 3%;
-    --foreground: 0 0% 95%;
+    --foreground: 0 85% 45%;
 
     --card: 0 5% 6%;
-    --card-foreground: 0 0% 95%;
+    --card-foreground: 210 40% 98.0392%;
 
     --popover: 0 5% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover-foreground: 210 40% 98.0392%;
 
     --primary: 0 85% 45%;
-    --primary-foreground: 0 85% 45%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 5% 10%;
+    --secondary: 229 84% 4.902%;
     --secondary-foreground: 0 85% 45%;
 
     --muted: 0 5% 12%;
-    --muted-foreground: 0 5% 50%;
+    --muted-foreground: 0 85% 45%;
 
     --accent: 0 85% 45%;
     --accent-foreground: 0 85% 45%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98.0392%;
 
-    --border: 0 8% 14%;
+    --border: 0 85% 45%;
     --input: 0 8% 14%;
     --ring: 0 85% 45%;
 
@@ -51,6 +53,10 @@
 
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'DM Sans', sans-serif;
+    --font-serif: "Crimson Text", ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
+  }
+  .dark {
+    --font-serif: "Crimson Text", ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
   }
 }
 
