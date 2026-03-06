@@ -6,48 +6,48 @@
 
 @layer base {
   :root {
-    --background: 240 12% 5%;
+    --background: 0 0% 3%;
     --foreground: 0 0% 95%;
 
-    --card: 240 10% 8%;
+    --card: 0 5% 6%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 240 10% 10%;
+    --popover: 0 5% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 16 90% 55%;
+    --primary: 0 85% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 10% 12%;
+    --secondary: 0 5% 10%;
     --secondary-foreground: 0 0% 85%;
 
-    --muted: 240 8% 14%;
-    --muted-foreground: 240 5% 55%;
+    --muted: 0 5% 12%;
+    --muted-foreground: 0 5% 50%;
 
-    --accent: 16 90% 55%;
+    --accent: 0 85% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 8% 16%;
-    --input: 240 8% 16%;
-    --ring: 16 90% 55%;
+    --border: 0 8% 14%;
+    --input: 0 8% 14%;
+    --ring: 0 85% 45%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 240 12% 7%;
+    --sidebar-background: 0 10% 5%;
     --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 16 90% 55%;
+    --sidebar-primary: 0 85% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 12%;
+    --sidebar-accent: 0 10% 10%;
     --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 240 8% 14%;
-    --sidebar-ring: 16 90% 55%;
+    --sidebar-border: 0 8% 12%;
+    --sidebar-ring: 0 85% 45%;
 
-    --player-background: 240 12% 4%;
-    --glass: 240 10% 10% / 0.6;
-    --glass-border: 240 8% 20% / 0.3;
+    --player-background: 0 0% 2%;
+    --glass: 0 5% 8% / 0.6;
+    --glass-border: 0 10% 18% / 0.3;
 
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'DM Sans', sans-serif;
@@ -77,15 +77,15 @@
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(16 90% 55%), hsl(30 95% 60%));
+    background: linear-gradient(135deg, hsl(0 85% 45%), hsl(0 90% 35%));
   }
 
   .gradient-dark {
-    background: linear-gradient(180deg, hsl(240 12% 8%), hsl(240 12% 4%));
+    background: linear-gradient(180deg, hsl(0 5% 6%), hsl(0 0% 2%));
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, hsl(16 90% 55%), hsl(30 95% 65%));
+    background: linear-gradient(135deg, hsl(0 85% 50%), hsl(0 70% 35%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
