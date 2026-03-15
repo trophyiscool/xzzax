@@ -82,7 +82,7 @@ local function createUI()
     local titleText = Instance.new("TextLabel", titleBar)
     titleText.Size = UDim2.new(0, 200, 0, 30)
     titleText.Position = UDim2.new(0, 10, 0, 0)
-    titleText.Text = "Camera Lock"
+    titleText.Text = "DVS"
     titleText.TextColor3 = Color3.fromRGB(88, 28, 135)
     titleText.BackgroundTransparency = 1
     titleText.Font = Enum.Font.GothamSemibold
@@ -153,7 +153,7 @@ local function createUI()
         local toggleBtn = Instance.new("TextButton", toggleBG)
         toggleBtn.Size = UDim2.new(0, 26, 0, 26)
         toggleBtn.Position = UDim2.new(0, 1, 0.5, -13)
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         toggleBtn.Text = ""
         toggleBtn.BorderSizePixel = 0
         toggleBtn.AutoButtonColor = false
@@ -198,7 +198,7 @@ local function createUI()
         local toggleBtn = Instance.new("TextButton", toggleBG)
         toggleBtn.Size = UDim2.new(0, 26, 0, 26)
         toggleBtn.Position = UDim2.new(0, 1, 0.5, -13)
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         toggleBtn.Text = ""
         toggleBtn.BorderSizePixel = 0
         toggleBtn.AutoButtonColor = false
@@ -241,7 +241,7 @@ local function createUI()
         local toggleBtn = Instance.new("TextButton", toggleBG)
         toggleBtn.Size = UDim2.new(0, 26, 0, 26)
         toggleBtn.Position = UDim2.new(0, 1, 0.5, -13)
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         toggleBtn.Text = ""
         toggleBtn.BorderSizePixel = 0
         toggleBtn.AutoButtonColor = false
@@ -315,7 +315,7 @@ local function createUI()
         ContextActionService:UnbindAction("CameraLock")
         
         -- Show unload notification
-        showNotification("Camera Lock unloaded successfully")
+        showNotification("DVS unloaded successfully")
         
         -- Force destroy the screenGui without relying on animation completion
         spawn(function()
@@ -400,7 +400,7 @@ function animateToggle(toggleBtn, toggleBG, state)
     }):Play()
     
     TweenService:Create(toggleBG, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-        BackgroundColor3 = state and Color3.fromRGB(0, 122, 255) or Color3.fromRGB(220, 220, 225)
+        BackgroundColor3 = state and Color3.fromRGB(200, 0, 255) or Color3.fromRGB(88, 28, 135)
     }):Play()
 end
 
