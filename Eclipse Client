@@ -1,5 +1,5 @@
--- Eclipse Client V1 - Camera Lock + ESP + Noclip + Toggle Glow
--- Glow added to active toggles
+-- Eclipse Client V1 - Full Upgraded Version
+-- Camera Lock + Purple ESP + Noclip + Glow on Active Toggles
 
 local connectionStorage = {}
 
@@ -41,13 +41,12 @@ _G.isNoclip      = _G.isNoclip      or false
 -- ESP Variables
 local espHighlights = {}
 
--- Keep track of core UI elements
+-- UI & Noclip
 local screenGui = nil
-
--- Noclip connection
+local frame = nil
 local noclipConn = nil
 
--- Simple Noclip logic
+-- Noclip logic
 local function updateNoclip()
     if noclipConn then
         noclipConn:Disconnect()
@@ -73,78 +72,117 @@ local function updateNoclip()
 end
 
 -- Rounded corners helper
-function createRoundedCorners(parent, radius)
+local function createRoundedCorners(parent, radius)
     local corner = Instance.new("UICorner", parent)
     corner.CornerRadius = radius or UDim.new(0, 0)
     return corner
 end
 
--- Glow helper (purple neon outline + pulse when active)
+-- Glow helper (purple neon outline + pulse)
 local function createGlow(parent, enabled)
     local stroke = parent:FindFirstChildOfClass("UIStroke")
     if stroke then stroke:Destroy() end
 
     if enabled then
         stroke = Instance.new("UIStroke")
-        stroke.Color = Color3.fromRGB(200, 0, 255)  -- bright purple
+        stroke.Color = Color3.fromRGB(200, 0, 255)
         stroke.Thickness = 2.5
         stroke.Transparency = 0.3
         stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         stroke.LineJoinMode = Enum.LineJoinMode.Round
         stroke.Parent = parent
 
-        -- Subtle pulse animation (optional - remove if you want static glow)
         TweenService:Create(stroke, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
             Transparency = 0.1
         }):Play()
     end
 end
 
--- UI Setup
+-- Cleanup existing UI
+local function cleanupExistingUI()
+    for _, gui in pairs(player.PlayerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui.Name == "CameraLockUI" then
+            gui:Destroy()
+        end
+    end
+end
+
+-- UI Creation
 local function createUI()
     cleanupExistingUI()
 
-    screenGui = Instance.new("ScreenGui", player.PlayerGui)
+    screenGui = Instance.new("ScreenGui")
     screenGui.Name = "CameraLockUI"
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     screenGui.ResetOnSpawn = false
+    screenGui.Parent = player.PlayerGui
 
-    local frame = Instance.new("Frame", screenGui)
+    frame = Instance.new("Frame", screenGui)
     frame.Size = UDim2.new(0, 600, 0, 280)
     frame.Position = UDim2.new(0.5, -300, -0.3, 0)
     frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     frame.BorderSizePixel = 0
     frame.ClipsDescendants = true
-
     createRoundedCorners(frame, UDim.new(0.04, 0))
 
-    -- Title Bar, text, buttons → unchanged from your code ...
+    local titleBar = Instance.new("Frame", frame)
+    titleBar.Size = UDim2.new(1, 0, 0, 30)
+    titleBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    createRoundedCorners(titleBar, UDim.new(0.04, 0))
 
-    -- (Paste your titleBar, titleText, uiTitleText, closeButton, minimizeButton code here - no changes needed)
+    local titleText = Instance.new("TextLabel", titleBar)
+    titleText.Size = UDim2.new(0, 200, 0, 30)
+    titleText.Position = UDim2.new(0, 10, 0, 0)
+    titleText.Text = "Welcome To Eclipse"
+    titleText.TextColor3 = Color3.fromRGB(88, 28, 135)
+    titleText.BackgroundTransparency = 1
+    titleText.Font = Enum.Font.GothamSemibold
+    titleText.TextSize = 16
+    titleText.TextXAlignment = Enum.TextXAlignment.Left
 
-    local leftToggles = {
-        {name = "Lock to Torso", pos = 0.25, var = "isEnabled"},
-        {name = "Lock to Head", pos = 0.50, var = "lockToHead"},
-        {name = "ESP", pos = 0.75, var = "espEnabled"},
+    local uiTitleText = Instance.new("TextLabel", frame)
+    uiTitleText.Size = UDim2.new(0, 200, 0, 30)
+    uiTitleText.Position = UDim2.new(0.5, -100, 0.85, 0)
+    uiTitleText.Text = "Eclipse Client V1"
+    uiTitleText.TextColor3 = Color3.fromRGB(88, 28, 135)
+    uiTitleText.BackgroundTransparency = 1
+    uiTitleText.Font = Enum.Font.GothamMedium
+    uiTitleText.TextSize = 18
+
+    local closeButton = Instance.new("TextButton", titleBar)
+    closeButton.Size = UDim2.new(0, 15, 0, 15)
+    closeButton.Position = UDim2.new(0.97, -10, 0.5, -7.5)
+    closeButton.Text = ""
+    closeButton.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+    closeButton.BorderSizePixel = 0
+    closeButton.AutoButtonColor = false
+    createRoundedCorners(closeButton, UDim.new(1, 0))
+
+    local minimizeButton = Instance.new("TextButton", titleBar)
+    minimizeButton.Size = UDim2.new(0, 15, 0, 15)
+    minimizeButton.Position = UDim2.new(0.90, -10, 0.5, -7.5)
+    minimizeButton.Text = ""
+    minimizeButton.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+    minimizeButton.BorderSizePixel = 0
+    minimizeButton.AutoButtonColor = false
+    createRoundedCorners(minimizeButton, UDim.new(1, 0))
+
+    -- Toggles
+    local toggles = {
+        {name = "Lock to Torso",   x = 0.12, pos = 0.25, var = "isEnabled"},
+        {name = "Lock to Head",    x = 0.12, pos = 0.50, var = "lockToHead"},
+        {name = "ESP",             x = 0.12, pos = 0.75, var = "espEnabled"},
+        {name = "Wall Check",      x = 0.62, pos = 0.25, var = "wallCheck"},
+        {name = "Lock to Nearest", x = 0.62, pos = 0.50, var = "lockToNearest"},
+        {name = "Team Check",      x = 0.62, pos = 0.75, var = "teamCheck"},
+        {name = "Alive Check",     x = 0.37, pos = 0.50, var = "aliveCheck"},
+        {name = "Noclip",          x = 0.37, pos = 0.65, var = "isNoclip"},
     }
 
-    local rightToggles = {
-        {name = "Wall Check", pos = 0.25, var = "wallCheck"},
-        {name = "Lock to Nearest", pos = 0.50, var = "lockToNearest"},
-        {name = "Team Check", pos = 0.75, var = "teamCheck"}
-    }
-
-    local bottomToggles = {
-        {name = "Alive Check", pos = 0.5, var = "aliveCheck"},
-        {name = "Noclip", pos = 0.65, var = "isNoclip"},
-    }
-
-    local function setupToggle(toggleData, xOffset)
-        local yPos = toggleData.pos
-
+    for _, data in ipairs(toggles) do
         local toggleBG = Instance.new("Frame", frame)
         toggleBG.Size = UDim2.new(0, 54, 0, 28)
-        toggleBG.Position = UDim2.new(xOffset, 0, yPos, 0)
+        toggleBG.Position = UDim2.new(data.x, 0, data.pos, 0)
         toggleBG.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
         toggleBG.BorderSizePixel = 0
 
@@ -157,8 +195,8 @@ local function createUI()
 
         local label = Instance.new("TextLabel", frame)
         label.Size = UDim2.new(0, 200, 0, 20)
-        label.Position = UDim2.new(xOffset + 0.10, 0, yPos, 4)
-        label.Text = toggleData.name
+        label.Position = UDim2.new(data.x + 0.10, 0, data.pos, 4)
+        label.Text = data.name
         label.TextColor3 = Color3.fromRGB(88, 28, 135)
         label.BackgroundTransparency = 1
         label.Font = Enum.Font.GothamMedium
@@ -168,33 +206,90 @@ local function createUI()
         createRoundedCorners(toggleBG, UDim.new(1, 0))
         createRoundedCorners(toggleBtn, UDim.new(1, 0))
 
-        if _G[toggleData.var] then
+        if _G[data.var] then
             animateToggle(toggleBtn, toggleBG, true)
         end
 
-        -- Initial glow based on saved state
-        createGlow(toggleBG, _G[toggleData.var])
+        createGlow(toggleBG, _G[data.var])
 
         toggleBtn.MouseButton1Click:Connect(function()
-            _G[toggleData.var] = not _G[toggleData.var]
-            animateToggle(toggleBtn, toggleBG, _G[toggleData.var])
+            _G[data.var] = not _G[data.var]
+            animateToggle(toggleBtn, toggleBG, _G[data.var])
 
-            if toggleData.var == "espEnabled" then
+            if data.var == "espEnabled" then
                 updateESP()
-            elseif toggleData.var == "isNoclip" then
+            elseif data.var == "isNoclip" then
                 updateNoclip()
             end
         end)
     end
 
-    for _, t in pairs(leftToggles) do setupToggle(t, 0.12) end
-    for _, t in pairs(rightToggles) do setupToggle(t, 0.62) end
-    for _, t in pairs(bottomToggles) do setupToggle(t, 0.37) end
+    -- Minimize
+    minimizeButton.MouseButton1Click:Connect(function()
+        TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, -300, -0.5, 0)
+        }):Play()
+        showNotification("UI minimized - Press Right Alt to reopen")
+    end)
 
-    -- Your minimize/close/drag/keybinds/monitoring code here (unchanged)
+    -- Close
+    closeButton.MouseButton1Click:Connect(function()
+        for _, conn in pairs(connectionStorage) do
+            if conn.Connected then conn:Disconnect() end
+        end
+        connectionStorage = {}
 
-    -- ... paste your existing UI Controls, drag logic, minimize/close connections, setupKeybinds, setupPlayerMonitoring ...
+        isLocking = false
+        _G.isEnabled = false
+        _G.lockToHead = false
+        _G.espEnabled = false
+        _G.wallCheck = false
+        _G.lockToNearest = false
+        _G.teamCheck = false
+        _G.aliveCheck = false
+        _G.isNoclip = false
+        updateNoclip()
 
+        for _, h in pairs(espHighlights) do
+            if h and h.Parent then h:Destroy() end
+        end
+        espHighlights = {}
+
+        ContextActionService:UnbindAction("CameraLock")
+
+        showNotification("Eclipse unloaded successfully")
+
+        task.delay(0.5, function()
+            if screenGui then screenGui:Destroy() end
+        end)
+    end)
+
+    -- Dragging
+    titleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            isDragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+        end
+    end)
+
+    titleBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            isDragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + delta.X,
+                startPos.Y.Scale, startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    -- Initial animation
     frame.Position = UDim2.new(0.5, -300, -0.5, 0)
     TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
         Position = UDim2.new(0.5, -300, 0.05, 0)
@@ -203,7 +298,7 @@ local function createUI()
     return frame
 end
 
--- Updated animateToggle with glow
+-- Animate toggle + glow
 function animateToggle(toggleBtn, toggleBG, state)
     TweenService:Create(toggleBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
         Position = state and UDim2.new(1, -27, 0.5, -13) or UDim2.new(0, 1, 0.5, -13)
@@ -216,9 +311,260 @@ function animateToggle(toggleBtn, toggleBG, state)
     createGlow(toggleBG, state)
 end
 
--- Your other functions (updateESP, isVisible, findTarget, lockCamera, showNotification, etc.) remain unchanged
+-- ESP
+function updateESP()
+    for _, highlight in pairs(espHighlights) do
+        if highlight and highlight.Parent then highlight:Destroy() end
+    end
+    espHighlights = {}
 
--- Main Initialization (unchanged)
+    if _G.espEnabled then
+        for _, otherPlayer in pairs(Players:GetPlayers()) do
+            if otherPlayer ~= player and otherPlayer.Character then
+                local character = otherPlayer.Character
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+                if _G.aliveCheck and (not humanoid or humanoid.Health <= 0) then continue end
+
+                if humanoid and humanoid.Health > 0 then
+                    if _G.teamCheck and not (otherPlayer.Team ~= player.Team) then continue end
+
+                    local highlight = Instance.new("Highlight")
+                    highlight.FillColor = Color3.fromRGB(128, 0, 255)
+                    highlight.OutlineColor = Color3.fromRGB(200, 0, 255)
+                    highlight.FillTransparency = 0.3
+                    highlight.OutlineTransparency = 0.1
+                    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    highlight.Adornee = character
+                    highlight.Parent = screenGui
+                    table.insert(espHighlights, highlight)
+
+                    local healthLabel = Instance.new("BillboardGui")
+                    healthLabel.Size = UDim2.new(0, 100, 0, 40)
+                    healthLabel.StudsOffset = Vector3.new(0, 3, 0)
+                    healthLabel.Adornee = character:FindFirstChild("Head")
+                    healthLabel.AlwaysOnTop = true
+                    healthLabel.Parent = screenGui
+
+                    local healthText = Instance.new("TextLabel", healthLabel)
+                    healthText.Size = UDim2.new(1, 0, 1, 0)
+                    healthText.BackgroundTransparency = 1
+                    healthText.Text = otherPlayer.Name .. "\nHP: " .. math.floor(humanoid.Health)
+                    healthText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    healthText.TextStrokeTransparency = 0.5
+                    healthText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    healthText.Font = Enum.Font.GothamBold
+                    healthText.TextSize = 14
+
+                    table.insert(espHighlights, healthLabel)
+
+                    local healthConn = humanoid.HealthChanged:Connect(function()
+                        if healthText and healthText.Parent then
+                            healthText.Text = otherPlayer.Name .. "\nHP: " .. math.floor(humanoid.Health)
+                            if _G.aliveCheck and humanoid.Health <= 0 then
+                                if highlight and highlight.Parent then highlight:Destroy() end
+                                if healthLabel and healthLabel.Parent then healthLabel:Destroy() end
+                            end
+                        end
+                    end)
+                    table.insert(connectionStorage, healthConn)
+                end
+            end
+        end
+    end
+end
+
+-- Visibility check
+function isVisible(targetPart)
+    if not _G.wallCheck then return true end
+
+    local origin = camera.CFrame.Position
+    local direction = (targetPart.Position - origin).Unit
+    local rayParams = RaycastParams.new()
+    rayParams.FilterDescendantsInstances = {player.Character}
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+    local result = workspace:Raycast(origin, direction * 1000, rayParams)
+    return result and result.Instance:IsDescendantOf(targetPart.Parent)
+end
+
+-- Enemy check
+function isEnemy(targetPlayer)
+    if not _G.teamCheck then return true end
+    return targetPlayer.Team ~= player.Team
+end
+
+-- Alive check
+function isAlive(character)
+    if not _G.aliveCheck then return true end
+    if not character then return false end
+
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    return humanoid and humanoid.Health > 0
+end
+
+-- Find target
+function findTarget()
+    local nearest = nil
+    local minDist = math.huge
+
+    for _, otherPlayer in pairs(Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and isEnemy(otherPlayer) then
+            local character = otherPlayer.Character
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+            if not isAlive(character) then continue end
+
+            if humanoid and humanoid.Health > 0 then
+                local targetPart = _G.lockToHead and character:FindFirstChild("Head") or character:FindFirstChild("HumanoidRootPart")
+
+                if targetPart and isVisible(targetPart) then
+                    local screenPos, onScreen = camera:WorldToScreenPoint(targetPart.Position)
+
+                    if onScreen then
+                        local actualDistance = (targetPart.Position - camera.CFrame.Position).Magnitude
+                        local mousePos = Vector2.new(mouse.X, mouse.Y)
+                        local screenDistance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+
+                        if _G.lockToNearest then
+                            if actualDistance < minDist then
+                                minDist = actualDistance
+                                nearest = character
+                            end
+                        else
+                            if screenDistance < 150 and screenDistance < minDist then
+                                minDist = screenDistance
+                                nearest = character
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return nearest
+end
+
+-- Camera lock
+local lockCameraActive = false
+function lockCamera()
+    if lockCameraActive then return end
+    lockCameraActive = true
+
+    local cameraLockLoop = RunService.RenderStepped:Connect(function()
+        if not isLocking or not _G.isEnabled then
+            cameraLockLoop:Disconnect()
+            lockCameraActive = false
+            return
+        end
+
+        local targetCharacter = findTarget()
+        if targetCharacter then
+            local targetPart = _G.lockToHead and targetCharacter:FindFirstChild("Head") or targetCharacter:FindFirstChild("HumanoidRootPart")
+
+            if targetPart then
+                local newCFrame = CFrame.new(camera.CFrame.Position, targetPart.Position)
+                if (camera.CFrame.LookVector - newCFrame.LookVector).Magnitude > 0.01 then
+                    TweenService:Create(camera, TweenInfo.new(lockOnSmoothness), {CFrame = newCFrame}):Play()
+                else
+                    camera.CFrame = newCFrame
+                end
+            end
+        end
+    end)
+
+    table.insert(connectionStorage, cameraLockLoop)
+end
+
+-- Notification
+function showNotification(message)
+    local notification = Instance.new("Frame", screenGui)
+    notification.Size = UDim2.new(0, 240, 0, 40)
+    notification.Position = UDim2.new(0.5, -120, 0.9, 0)
+    notification.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    notification.BackgroundTransparency = 0.6
+    notification.BorderSizePixel = 0
+    createRoundedCorners(notification, UDim.new(0.2, 0))
+
+    local textLabel = Instance.new("TextLabel", notification)
+    textLabel.Size = UDim2.new(1, -20, 1, 0)
+    textLabel.Position = UDim2.new(0, 10, 0, 0)
+    textLabel.Text = message
+    textLabel.TextColor3 = Color3.fromRGB(88, 28, 135)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.GothamMedium
+    textLabel.TextSize = 14
+    textLabel.TextWrapped = true
+
+    notification.Position = UDim2.new(0.5, -120, 1.1, 0)
+    TweenService:Create(notification, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.5, -120, 0.9, 0)
+    }):Play()
+
+    spawn(function()
+        wait(3)
+        TweenService:Create(notification, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            Position = UDim2.new(0.5, -120, 1.1, 0),
+            BackgroundTransparency = 1
+        }):Play()
+        wait(0.5)
+        notification:Destroy()
+    end)
+end
+
+-- Keybinds
+local function setupKeybinds()
+    local isUIMinimized = false
+
+    local inputBeganConn = UserInputService.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton2 and _G.isEnabled then
+            isLocking = true
+            lockCamera()
+        elseif input.KeyCode == Enum.KeyCode.RightAlt then
+            if isUIMinimized then
+                TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                    Position = UDim2.new(0.5, -300, 0.05, 0)
+                }):Play()
+                isUIMinimized = false
+            else
+                TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+                    Position = UDim2.new(0.5, -300, -0.5, 0)
+                }):Play()
+                isUIMinimized = true
+                showNotification("UI minimized - Press Right Alt to reopen")
+            end
+        end
+    end)
+    table.insert(connectionStorage, inputBeganConn)
+
+    local inputEndedConn = UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton2 then
+            isLocking = false
+        end
+    end)
+    table.insert(connectionStorage, inputEndedConn)
+end
+
+-- Player monitoring
+function setupPlayerMonitoring()
+    Players.PlayerAdded:Connect(function()
+        if _G.espEnabled then updateESP() end
+    end)
+
+    Players.PlayerRemoving:Connect(function()
+        if _G.espEnabled then updateESP() end
+    end)
+
+    player.CharacterAdded:Connect(function()
+        if not screenGui or not screenGui.Parent then
+            frame = createUI()
+            setupKeybinds()
+        end
+        if _G.espEnabled then updateESP() end
+    end)
+end
+
+-- Main init
 frame = createUI()
 setupKeybinds()
 setupPlayerMonitoring()
@@ -226,7 +572,7 @@ setupPlayerMonitoring()
 if _G.espEnabled then updateESP() end
 showNotification("Welcome to Eclipse")
 
--- Cleanup (with noclip disconnect)
+-- Cleanup
 return function()
     for _, conn in pairs(connectionStorage) do
         if conn and conn.Connected then conn:Disconnect() end
