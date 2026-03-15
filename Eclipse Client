@@ -19,6 +19,7 @@ local espEnabled = false
 local lockOnSmoothness = 0.000 -- Set to 0.000 as requested
 local lockToNearest = false
 local wallCheck = true
+local isNoclip = false
 local teamCheck = false
 local aliveCheck = false -- New variable for alive check
 local isDragging = false
@@ -40,6 +41,29 @@ local function cleanupExistingUI()
     end
 end
 
+-- Noclip connection
+local noclipConn = nil
+
+-- Simple Noclip logic
+local function updateNoclip()
+    if noclipConn then
+        noclipConn:Disconnect()
+        noclipConn = nil
+    end
+
+    if isNoclip then
+        noclipConn = RunService.Stepped:Connect(function()
+            if not player.Character then return end
+            for _, part in ipairs(player.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end)
+        table.insert(connectionStorage, noclipConn)
+    end
+end
+
 -- Function to create rounded corners
 function createRoundedCorners(parent, radius)
     local corner = Instance.new("UICorner", parent)
@@ -52,15 +76,14 @@ local function createUI()
     -- Clean up any existing UIs to prevent duplicates
     cleanupExistingUI()
     
-    screenGui = Instance.new("ScreenGui", player.PlayerGui)
+ screenGui = Instance.new("ScreenGui", player.PlayerGui)
     screenGui.Name = "CameraLockUI"
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    screenGui.ResetOnSpawn = false -- IMPORTANT: This prevents UI from being deleted on respawn
+    screenGui.ResetOnSpawn = false
 
-    -- Main Frame (Made wider)
     local frame = Instance.new("Frame", screenGui)
-    frame.Size = UDim2.new(0, 600, 0, 250) -- Increased width from 400 to 600
-    frame.Position = UDim2.new(0.5, -300, -0.3, 0) -- Adjusted position to center
+    frame.Size = UDim2.new(0, 600, 0, 280)          -- made slightly taller
+    frame.Position = UDim2.new(0.5, -300, -0.3, 0)
     frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     frame.BorderSizePixel = 0
     frame.ClipsDescendants = true
@@ -136,6 +159,7 @@ local function createUI()
     -- Add Alive Check Toggle (new)
     local bottomToggles = {
         {name = "Alive Check", pos = 0.5, var = "aliveCheck"},
+        {name = "Noclip",        pos = 0.65, var = "isNoclip"},   -- ← added
     }
 
     -- Create Left Toggles
