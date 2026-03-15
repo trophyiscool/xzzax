@@ -82,7 +82,7 @@ local function createUI()
     local titleText = Instance.new("TextLabel", titleBar)
     titleText.Size = UDim2.new(0, 200, 0, 30)
     titleText.Position = UDim2.new(0, 10, 0, 0)
-    titleText.Text = "DVS"
+    titleText.Text = "Welcome To Eclipse"
     titleText.TextColor3 = Color3.fromRGB(88, 28, 135)
     titleText.BackgroundTransparency = 1
     titleText.Font = Enum.Font.GothamSemibold
@@ -93,7 +93,7 @@ local function createUI()
     local uiTitleText = Instance.new("TextLabel", frame)
     uiTitleText.Size = UDim2.new(0, 200, 0, 30)
     uiTitleText.Position = UDim2.new(0.5, -100, 0.85, 0) -- Changed from 0.92 to 0.85 to move it higher
-    uiTitleText.Text = "Demon Void Script"
+    uiTitleText.Text = "Eclipse Client V1"
     uiTitleText.TextColor3 = Color3.fromRGB(88, 28, 135)
     uiTitleText.BackgroundTransparency = 1
     uiTitleText.Font = Enum.Font.GothamMedium
@@ -718,7 +718,7 @@ if _G.espEnabled then
 end
 
 -- Show welcome notification
-showNotification("Welcome to DVS")
+showNotification("Welcome to Eclipse")
 
 -- Return cleanup function
 return function()
